@@ -30,8 +30,6 @@
       }
     ],
     "loadSpin": [
-      {
-        "loadSpin": "true"
-      }
+      "true"
     ]
   }
