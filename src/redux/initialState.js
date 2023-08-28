@@ -1,5 +1,5 @@
 const initialState = {
-    tables: [],
+    tables: []
 };
 
 export default initialState;

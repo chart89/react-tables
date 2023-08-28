@@ -8,7 +8,10 @@ import Footer from "./components/views/Footer/Footer";
 
 
 
+
 function App() {
+
+
   return (
     <Container>
       <Header />

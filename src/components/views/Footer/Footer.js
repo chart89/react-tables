@@ -1,7 +1,11 @@
+import styles from './Footer.module.scss';
+
 const Footer = () => {
 
     return (
-        <h3>Footer</h3>
+        <div className={styles.footerDiv}>
+            <p>Copyright Pizzeria.App 2023</p>
+        </div>
     );
 };
 
