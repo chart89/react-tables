@@ -1,5 +1,6 @@
 const initialState = {
-    tables: []
+    tables: [],
+    loadSpin: []
 };
 
 export default initialState;

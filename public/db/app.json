@@ -28,5 +28,10 @@
         "maxPeopleAmount": 3,
         "bill": 0
       }
+    ],
+    "loadSpin": [
+      {
+        "loadSpin": "true"
+      }
     ]
   }

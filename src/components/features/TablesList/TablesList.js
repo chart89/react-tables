@@ -1,12 +1,12 @@
 
 
-const TablesList = ({ status }) => {
+const TablesList = ({ id, status }) => {
 
     
 
     return (
         <div>
-        <h5>status: {status}</h5>
+        <h5>Table: {id} {status}</h5>
         </div>
     );
 };
