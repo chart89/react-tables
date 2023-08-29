@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { fetchTables } from '../../../redux/tablesRedux';
 import LoadSpinner from '../../features/Spinner/Spinner';
 import { fetchLoadSpin, getLoadSpin } from '../../../redux/loadSpinRedux';
+import { fetchstatusName } from '../../../redux/statusNameRedux';
 
 
 const Home = () => {
@@ -16,6 +17,7 @@ const Home = () => {
   
     useEffect(() => dispatch(fetchTables()), [dispatch]);
     useEffect(() => dispatch(fetchLoadSpin()), [dispatch]);
+    useEffect(() => dispatch(fetchstatusName()), [dispatch]);
 
     const allTables = useSelector(getAllTables);
     const getLoad = useSelector(getLoadSpin);

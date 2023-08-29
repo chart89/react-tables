@@ -31,5 +31,16 @@
     ],
     "loadSpin": [
       "true"
+    ],
+    "status": [
+      {
+        "statusName": "Cleaning"
+      },
+      {
+        "statusName": "Busy"
+      },
+      {
+        "statusName": "Free"
+      }
     ]
   }

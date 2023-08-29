@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 const TablesList = ({ id, status }) => {
 
+
     return (
         <div className="row border-bottom my-2">
             <div className="col-1">
