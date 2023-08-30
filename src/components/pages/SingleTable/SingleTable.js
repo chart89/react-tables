@@ -1,6 +1,6 @@
-import { useParams, Navigate } from 'react-router';
-import { useSelector } from 'react-redux';
-import { getTableById } from '../../../redux/tablesRedux';
+import { useParams, Navigate, useNavigate } from 'react-router';
+import { useSelector, useDispatch } from 'react-redux';
+import { editTableInfo, getTableById } from '../../../redux/tablesRedux';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -14,12 +14,39 @@ import shortid from 'shortid';
 const SingleTable = () => {
 
     const { id } = useParams();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
 
     const tableData = useSelector(state => getTableById(state, id));
+    const allStatus = useSelector(getStatusName);
 
     const [staTus, setStaTus] = useState(tableData.status);
+    const [peopleAm, setPeopleAm] = useState(tableData.peopleAmount);
+    const [maxPeopleAm, setmaxPeopleAm] = useState(tableData.maxPeopleAmount)
 
-    const allStatus = useSelector(getStatusName);
+    const handleSubmit = e => {
+        e.preventDefault();
+        dispatch(editTableInfo(staTus, id, parseInt(peopleAm), parseInt(maxPeopleAm)));
+        navigate('/');
+    };
+
+    if(peopleAm < 0) {
+        setPeopleAm(0);
+    } else if(peopleAm > 10) {
+        setPeopleAm(10);
+    };
+
+    if(maxPeopleAm < 0) {
+        setmaxPeopleAm(0);
+    } else if(maxPeopleAm > 10) {
+        setmaxPeopleAm(10);
+    };
+
+    if(peopleAm > maxPeopleAm) {
+        setPeopleAm(maxPeopleAm);
+    };
+
 
 
     if(!tableData) return <Navigate to="/" />
@@ -28,14 +55,14 @@ const SingleTable = () => {
             <Row className="my-3">
                 <Col><h1>Table {tableData.id}</h1></Col>
             </Row>
-            <Form>
+            <Form onSubmit={handleSubmit}>
                 <Form.Group>
                     <Row className="w-25">
                         <Col className="col-2">
-                            <Form.Label className="mt-1 fw-bold">Status</Form.Label>
+                            <Form.Label className="mt-1 fw-bold">Status:</Form.Label>
                         </Col>
                         <Col className="col-10">
-                            <Form.Select
+                            <Form.Select className="mx-3"
                                 aria-label="Status" 
                                 onChange={e => setStaTus(e.target.value)}>
                                 <option>{staTus}</option>
@@ -44,6 +71,33 @@ const SingleTable = () => {
                         </Col>
                     </Row>
                 </Form.Group>
+                <Form.Group className="my-3">
+                    <Row className="w-25">
+                        <Col className="col-2">
+                            <Form.Label className="mt-1 fw-bold">People:</Form.Label>
+                        </Col>
+                        <Col className="col-3 m-0">
+                        <Form.Control className="mx-3" 
+                            type="text" 
+                            placeholder="" 
+                            value={peopleAm} 
+                            onChange={e => setPeopleAm(e.target.value)} />
+                        </Col>
+                        <Col className="col-1 mt-1 ms-4">/</Col>
+                        <Col className="col-3 m-0">
+                        <Form.Control className="mx-3" 
+                            type="text" 
+                            placeholder="" 
+                            value={maxPeopleAm} 
+                            onChange={e => setmaxPeopleAm(e.target.value)} />
+                        </Col>
+                    </Row>
+                </Form.Group>
+                <Row className="my-3">
+                    <Col>
+                        <Button variant="primary" type="submit">Update</Button>{' '}
+                    </Col>
+                </Row>
             </Form>
         </Container>
         
