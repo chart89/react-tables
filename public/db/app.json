@@ -9,16 +9,16 @@
     },
     {
       "id": "2",
-      "status": "Cleaning",
+      "status": "Reserved",
       "peopleAmount": 4,
-      "maxPeopleAmount": 6,
+      "maxPeopleAmount": 5,
       "bill": 0
     },
     {
       "status": "Reserved",
       "id": "3",
-      "peopleAmount": 2,
-      "maxPeopleAmount": 2,
+      "peopleAmount": 8,
+      "maxPeopleAmount": 8,
       "bill": 0
     },
     {
@@ -31,7 +31,7 @@
     {
       "status": "Busy",
       "id": "5",
-      "peopleAmount": 7,
+      "peopleAmount": 4,
       "maxPeopleAmount": 7,
       "bill": 0
     }

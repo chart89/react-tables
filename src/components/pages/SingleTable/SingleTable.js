@@ -6,10 +6,11 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ShowStatus from '../../features/ShowStatus/ShowStatus';
 import { getStatusName } from '../../../redux/statusNameRedux';
 import shortid from 'shortid';
+import Bill from '../../features/Bill/Bill';
 
 const SingleTable = () => {
 
@@ -30,22 +31,31 @@ const SingleTable = () => {
         dispatch(editTableInfo(staTus, id, parseInt(peopleAm), parseInt(maxPeopleAm)));
         navigate('/');
     };
-
+    // if people amount is below 0 or above 10
     if(peopleAm < 0) {
         setPeopleAm(0);
     } else if(peopleAm > 10) {
         setPeopleAm(10);
     };
 
+    // if max people amount is below 0 or above 10
     if(maxPeopleAm < 0) {
         setmaxPeopleAm(0);
     } else if(maxPeopleAm > 10) {
         setmaxPeopleAm(10);
     };
 
+    // if people is more than max people
     if(peopleAm > maxPeopleAm) {
         setPeopleAm(maxPeopleAm);
     };
+
+    // if status is FREE or CLEANING people amount input is 0
+    useEffect(() => {
+        if(staTus == 'Free' || staTus == 'Cleaning' ) {
+        setPeopleAm(0);
+        };
+    }, [peopleAm, staTus]);
 
 
 
@@ -93,6 +103,7 @@ const SingleTable = () => {
                         </Col>
                     </Row>
                 </Form.Group>
+                <Bill bill={tableData.bill}/>
                 <Row className="my-3">
                     <Col>
                         <Button variant="primary" type="submit">Update</Button>{' '}
