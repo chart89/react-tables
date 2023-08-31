@@ -21,7 +21,7 @@ export const fetchTables = () => {
 };
 
 const URL = 'http://localhost:3131/tables/';
-export const editTableInfo = (status, id, peopleAmount, maxPeopleAmount) => {
+export const editTableInfo = (status, id, peopleAmount, maxPeopleAmount, bill) => {
   return (dispatch) => {
     const options = {
       method: 'PATCH',
@@ -32,12 +32,12 @@ export const editTableInfo = (status, id, peopleAmount, maxPeopleAmount) => {
         status: status,
         peopleAmount: peopleAmount,
         maxPeopleAmount: maxPeopleAmount,
-        bill: 0
+        bill: bill
       }),
     };
 
     fetch(URL + id, options)
-    .then(() => dispatch(editTable(status, id, peopleAmount, maxPeopleAmount)))
+    .then(() => dispatch(editTable(status, id, peopleAmount, maxPeopleAmount, bill)))
   }
 };
 

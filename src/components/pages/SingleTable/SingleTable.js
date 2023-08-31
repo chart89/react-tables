@@ -10,7 +10,8 @@ import { useEffect, useState } from 'react';
 import ShowStatus from '../../features/ShowStatus/ShowStatus';
 import { getStatusName } from '../../../redux/statusNameRedux';
 import shortid from 'shortid';
-import Bill from '../../features/Bill/Bill';
+import clsx from 'clsx';
+import styles from './SingleTable.module.scss';
 
 const SingleTable = () => {
 
@@ -24,45 +25,63 @@ const SingleTable = () => {
 
     const [staTus, setStaTus] = useState(tableData.status);
     const [peopleAm, setPeopleAm] = useState(tableData.peopleAmount);
-    const [maxPeopleAm, setmaxPeopleAm] = useState(tableData.maxPeopleAmount)
+    const [maxPeopleAm, setmaxPeopleAm] = useState(tableData.maxPeopleAmount);
+    const [dispBill, setDispBill] = useState(false);
+    const [billAm, setBillAm] = useState(tableData.bill);
+
 
     const handleSubmit = e => {
         e.preventDefault();
-        dispatch(editTableInfo(staTus, id, parseInt(peopleAm), parseInt(maxPeopleAm)));
+        dispatch(editTableInfo(staTus, id, parseInt(peopleAm), parseInt(maxPeopleAm), parseInt(billAm)));
         navigate('/');
     };
     // if people amount is below 0 or above 10
     if(peopleAm < 0) {
         setPeopleAm(0);
-    } else if(peopleAm > 10) {
+    };
+    
+    if(peopleAm > 10) {
         setPeopleAm(10);
     };
 
     // if max people amount is below 0 or above 10
     if(maxPeopleAm < 0) {
         setmaxPeopleAm(0);
-    } else if(maxPeopleAm > 10) {
+    }; 
+    
+    if(maxPeopleAm > 10) {
         setmaxPeopleAm(10);
     };
 
     // if people is more than max people
-    if(peopleAm > maxPeopleAm) {
+    useEffect(() => {
+        if(peopleAm > maxPeopleAm) {
         setPeopleAm(maxPeopleAm);
     };
+    }, []);
 
     // if status is FREE or CLEANING people amount input is 0
     useEffect(() => {
-        if(staTus == 'Free' || staTus == 'Cleaning' ) {
+        if(staTus === 'Free' || staTus === 'Cleaning' ) {
         setPeopleAm(0);
         };
     }, [peopleAm, staTus]);
+
+    useEffect(() => {
+    if(peopleAm < 1) {
+        setDispBill(true);
+        setBillAm(0);
+    } else {
+        setDispBill(false);
+    };
+}, [peopleAm]);
 
 
 
     if(!tableData) return <Navigate to="/" />
     return (
         <Container fluid="md">
-            <Row className="my-3">
+            <Row className='row'>
                 <Col><h1>Table {tableData.id}</h1></Col>
             </Row>
             <Form onSubmit={handleSubmit}>
@@ -82,20 +101,20 @@ const SingleTable = () => {
                     </Row>
                 </Form.Group>
                 <Form.Group className="my-3">
-                    <Row className="w-25">
-                        <Col className="col-2">
+                    <Row className={styles.rowDiv}>
+                        <Col className="col-2 me-3">
                             <Form.Label className="mt-1 fw-bold">People:</Form.Label>
                         </Col>
-                        <Col className="col-3 m-0">
-                        <Form.Control className="mx-3" 
+                        <Col className={'col ' + styles.impDiv}>
+                        <Form.Control className={styles.billImput} 
                             type="text" 
                             placeholder="" 
                             value={peopleAm} 
                             onChange={e => setPeopleAm(e.target.value)} />
                         </Col>
-                        <Col className="col-1 mt-1 ms-4">/</Col>
-                        <Col className="col-3 m-0">
-                        <Form.Control className="mx-3" 
+                        <Col className={'col ' + styles.impDiv}>/</Col>
+                        <Col className={'col ' + styles.impDiv}>
+                        <Form.Control className={styles.billImput} 
                             type="text" 
                             placeholder="" 
                             value={maxPeopleAm} 
@@ -103,7 +122,22 @@ const SingleTable = () => {
                         </Col>
                     </Row>
                 </Form.Group>
-                <Bill bill={tableData.bill}/>
+                <Form.Group className="my-3">
+                    <Row className="w-25">
+                        <Col className="col-2">
+                            <Form.Label className="mt-1 fw-bold">Bill:</Form.Label>
+                        </Col>
+                        <Col className="col-1 mt-1">$</Col>
+                        <Col className={'col ' + styles.impDiv}>
+                        <Form.Control className={clsx(styles.billImput, dispBill && 'd-none')} 
+                            type="text" 
+                            placeholder="" 
+                            value={billAm} 
+                            onChange={e => setBillAm(e.target.value)}
+                         />
+                        </Col>
+                    </Row>
+                </Form.Group>
                 <Row className="my-3">
                     <Col>
                         <Button variant="primary" type="submit">Update</Button>{' '}
@@ -116,24 +150,3 @@ const SingleTable = () => {
 };
 
 export default SingleTable;
-
-/*
-<Row className="my-3">
-                <Col><h1>Table {tableData.id}</h1></Col>
-            </Row>
-            <Row className="my-3">
-                <Col><span className="fw-bolder">Status: </span>{tableData.status}</Col>
-            </Row>
-            <Row className="my-3">
-                <Col><span className="fw-bolder">People: </span> {tableData.peopleAmount} / {tableData.maxPeopleAmount}</Col>
-            </Row>
-            <Row className="my-3">
-                <Col><span className="fw-bolder">Bill: $</span>{tableData.bill}</Col>
-            </Row>
-            <Row className="my-3">
-                <Col>
-                    <Button variant="primary">Update</Button>{' '}
-                </Col>
-            </Row>
-
-*/
