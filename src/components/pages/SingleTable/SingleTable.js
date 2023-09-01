@@ -6,59 +6,77 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { useEffect, useState } from 'react';
+import {  useEffect, useState } from 'react';
 import ShowStatus from '../../features/ShowStatus/ShowStatus';
 import { getStatusName } from '../../../redux/statusNameRedux';
 import shortid from 'shortid';
 import clsx from 'clsx';
 import styles from './SingleTable.module.scss';
+import { useForm } from "react-hook-form";
+import { fetchTables } from '../../../redux/tablesRedux';
+import { fetchstatusName } from '../../../redux/statusNameRedux';
 
 const SingleTable = () => {
 
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+  
+    useEffect(() => dispatch(fetchTables()), [dispatch]);
+    useEffect(() => dispatch(fetchstatusName()), [dispatch]);
 
 
     const tableData = useSelector(state => getTableById(state, id));
     const allStatus = useSelector(getStatusName);
+    const { register, handleSubmit: validate, formState: { errors } } = useForm();
 
-    const [staTus, setStaTus] = useState(tableData.status);
-    const [peopleAm, setPeopleAm] = useState(tableData.peopleAmount);
-    const [maxPeopleAm, setmaxPeopleAm] = useState(tableData.maxPeopleAmount);
+
+    const [staTus, setStaTus] = useState('');
+    const [peopleAm, setPeopleAm] = useState(0);
+    const [maxPeopleAm, setmaxPeopleAm] = useState(1);
     const [dispBill, setDispBill] = useState(false);
-    const [billAm, setBillAm] = useState(tableData.bill);
+    const [billAm, setBillAm] = useState(0);
+    const [statError, setStatError] = useState(false);
+
+    useEffect(() => {
+        if (tableData) {
+          setStaTus(tableData.status);
+          setPeopleAm(tableData.peopleAmount);
+          setmaxPeopleAm(tableData.maxPeopleAmount);
+          setBillAm(tableData.bill);
+        }
+      }, [tableData]);
 
 
     const handleSubmit = e => {
-        e.preventDefault();
+        setStatError(!staTus);
         dispatch(editTableInfo(staTus, id, parseInt(peopleAm), parseInt(maxPeopleAm), parseInt(billAm)));
         navigate('/');
     };
-    // if people amount is below 0 or above 10
-    if(peopleAm < 0) {
-        setPeopleAm(0);
-    };
-    
-    if(peopleAm > 10) {
-        setPeopleAm(10);
-    };
 
-    // if max people amount is below 0 or above 10
-    if(maxPeopleAm < 0) {
-        setmaxPeopleAm(0);
-    }; 
     
-    if(maxPeopleAm > 10) {
-        setmaxPeopleAm(10);
-    };
+    const handlePeopleAm = (e) => {
+        const value = parseInt(e.target.value);
+        if (!isNaN(value) && value >= 0 && value <= maxPeopleAm && value <= 10) {
+          setPeopleAm(value);
+        }
+      };
+    
+      const handleMaxPeopleAm = (e) => {
+        const value = parseInt(e.target.value);
+        if (!isNaN(value) && value >= 1 && value >= peopleAm && value <= 10) {
+          setmaxPeopleAm(value);
+        }
+      };
 
-    // if people is more than max people
-    useEffect(() => {
-        if(peopleAm > maxPeopleAm) {
-        setPeopleAm(maxPeopleAm);
-    };
-    }, []);
+      const handleBill = (e) => {
+        const value = parseInt(e.target.value);
+        if (!isNaN(value) && value >= 0) {
+            setBillAm(value);
+        } else if(isNaN(value)){
+            setBillAm(0);
+        };
+      };
 
     // if status is FREE or CLEANING people amount input is 0
     useEffect(() => {
@@ -67,6 +85,7 @@ const SingleTable = () => {
         };
     }, [peopleAm, staTus]);
 
+    //if there are not clients, bill should be hidden
     useEffect(() => {
     if(peopleAm < 1) {
         setDispBill(true);
@@ -84,7 +103,7 @@ const SingleTable = () => {
             <Row className='row'>
                 <Col><h1>Table {tableData.id}</h1></Col>
             </Row>
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={validate(handleSubmit)}>
                 <Form.Group>
                     <Row className="w-25">
                         <Col className="col-2">
@@ -97,6 +116,7 @@ const SingleTable = () => {
                                 <option>{staTus}</option>
                                 {allStatus.map(stat => <ShowStatus key={shortid()} statusName={stat.statusName} />)};
                             </Form.Select>
+                            {statError && <small className="d-block form-text text-danger mt-0 mb-3">Category can't be empty</small>} 
                         </Col>
                     </Row>
                 </Form.Group>
@@ -107,18 +127,18 @@ const SingleTable = () => {
                         </Col>
                         <Col className={'col ' + styles.impDiv}>
                         <Form.Control className={styles.billImput} 
-                            type="text" 
+                            type="number" 
                             placeholder="" 
                             value={peopleAm} 
-                            onChange={e => setPeopleAm(e.target.value)} />
+                            onChange={handlePeopleAm} />
                         </Col>
                         <Col className={'col ' + styles.impDiv}>/</Col>
                         <Col className={'col ' + styles.impDiv}>
                         <Form.Control className={styles.billImput} 
-                            type="text" 
+                            type="number" 
                             placeholder="" 
                             value={maxPeopleAm} 
-                            onChange={e => setmaxPeopleAm(e.target.value)} />
+                            onChange={handleMaxPeopleAm} />
                         </Col>
                     </Row>
                 </Form.Group>
@@ -130,11 +150,13 @@ const SingleTable = () => {
                         <Col className="col-1 mt-1">$</Col>
                         <Col className={'col ' + styles.impDiv}>
                         <Form.Control className={clsx(styles.billImput, dispBill && 'd-none')} 
-                            type="text" 
+                        {...register("billAm", { required: true})}
+                            type="number" 
                             placeholder="" 
                             value={billAm} 
-                            onChange={e => setBillAm(e.target.value)}
+                            onChange={handleBill}
                          />
+                         {errors.billAm && <small className="d-block form-text text-danger mt-2">This field is required (min 20)</small>}
                         </Col>
                     </Row>
                 </Form.Group>
@@ -150,3 +172,4 @@ const SingleTable = () => {
 };
 
 export default SingleTable;
+
