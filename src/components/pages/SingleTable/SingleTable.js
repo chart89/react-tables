@@ -16,9 +16,11 @@ import { useForm } from "react-hook-form";
 import { fetchTables } from '../../../redux/tablesRedux';
 import { fetchstatusName } from '../../../redux/statusNameRedux';
 
+
 const SingleTable = () => {
 
     const { id } = useParams();
+    
     const dispatch = useDispatch();
     const navigate = useNavigate();
   
@@ -31,7 +33,7 @@ const SingleTable = () => {
     const { register, handleSubmit: validate, formState: { errors } } = useForm();
 
 
-    const [staTus, setStaTus] = useState('');
+    const [staTus, setStaTus] = useState('Free');
     const [peopleAm, setPeopleAm] = useState(0);
     const [maxPeopleAm, setmaxPeopleAm] = useState(1);
     const [dispBill, setDispBill] = useState(false);
@@ -44,7 +46,7 @@ const SingleTable = () => {
           setPeopleAm(tableData.peopleAmount);
           setmaxPeopleAm(tableData.maxPeopleAmount);
           setBillAm(tableData.bill);
-        }
+        } 
       }, [tableData]);
 
 
@@ -122,18 +124,18 @@ const SingleTable = () => {
                 </Form.Group>
                 <Form.Group className="my-3">
                     <Row className={styles.rowDiv}>
-                        <Col className="col-2 me-3">
+                        <Col className="col-3 me-3">
                             <Form.Label className="mt-1 fw-bold">People:</Form.Label>
                         </Col>
-                        <Col className={'col ' + styles.impDiv}>
+                        <Col className={'col-3 ' + styles.impDiv}>
                         <Form.Control className={styles.billImput} 
                             type="number" 
                             placeholder="" 
                             value={peopleAm} 
                             onChange={handlePeopleAm} />
                         </Col>
-                        <Col className={'col ' + styles.impDiv}>/</Col>
-                        <Col className={'col ' + styles.impDiv}>
+                        <Col className={'col-1 ' + styles.slashDiv}>/</Col>
+                        <Col className={'col-3 ' + styles.impDiv}>
                         <Form.Control className={styles.billImput} 
                             type="number" 
                             placeholder="" 
@@ -156,7 +158,7 @@ const SingleTable = () => {
                             value={billAm} 
                             onChange={handleBill}
                          />
-                         {errors.billAm && <small className="d-block form-text text-danger mt-2">This field is required (min 20)</small>}
+                         {errors.billAm && <small className="d-block form-text text-danger mt-2">This field is required</small>}
                         </Col>
                     </Row>
                 </Form.Group>

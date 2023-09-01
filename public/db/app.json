@@ -3,9 +3,9 @@
     {
       "status": "Reserved",
       "id": "1",
-      "peopleAmount": 1,
-      "maxPeopleAmount": 10,
-      "bill": 56
+      "peopleAmount": 3,
+      "maxPeopleAmount": 4,
+      "bill": 96
     },
     {
       "id": "2",
@@ -17,9 +17,9 @@
     {
       "status": "Busy",
       "id": "3",
-      "peopleAmount": 8,
-      "maxPeopleAmount": 9,
-      "bill": 6
+      "peopleAmount": 9,
+      "maxPeopleAmount": 10,
+      "bill": 56
     },
     {
       "status": "Reserved",
@@ -33,7 +33,7 @@
       "id": "5",
       "peopleAmount": 6,
       "maxPeopleAmount": 10,
-      "bill": 0
+      "bill": 2
     }
   ],
   "loadSpin": [
