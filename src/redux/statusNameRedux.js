@@ -1,3 +1,5 @@
+import { API_URL } from "../config";
+
 //selectors
 export const getStatusName = (state) => state.status;
 
@@ -11,7 +13,7 @@ export const updateStatusName = payload => ({ type: UPDATE_STATUSNAME, payload }
 
 export const fetchstatusName = () => {
   return (dispatch) => {
-    fetch('http://localhost:3131/api/status')
+    fetch(API_URL + '/status')
     .then(res => res.json())
     .then(loadSpin => {dispatch(updateStatusName(loadSpin))});
   }

@@ -1,11 +1,11 @@
 {
   "tables": [
     {
-      "status": "Reserved",
+      "status": "Cleaning",
       "id": "1",
-      "peopleAmount": 3,
+      "peopleAmount": 0,
       "maxPeopleAmount": 4,
-      "bill": 96
+      "bill": 0
     },
     {
       "id": "2",
@@ -17,9 +17,9 @@
     {
       "status": "Busy",
       "id": "3",
-      "peopleAmount": 9,
+      "peopleAmount": 8,
       "maxPeopleAmount": 10,
-      "bill": 56
+      "bill": 50
     },
     {
       "status": "Reserved",

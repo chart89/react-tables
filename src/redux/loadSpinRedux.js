@@ -1,3 +1,5 @@
+import { API_URL } from "../config";
+
 //selectors
 export const getLoadSpin = (state) => state.loadSpin;
 
@@ -11,7 +13,7 @@ export const updateLoadSpin = payload => ({ type: UPDATE_LOADSPIN, payload });
 
 export const fetchLoadSpin = () => {
   return (dispatch) => {
-    fetch('http://localhost:3131/api/loadSpin')
+    fetch(API_URL + '/loadSpin')
     .then(res => res.json())
     .then(loadSpin => {dispatch(updateLoadSpin(loadSpin))});
   }
